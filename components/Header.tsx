@@ -80,7 +80,7 @@ export default function Header() {
         </a>
 
         {/* ── Desktop Nav ── */}
-        <nav className="hidden md:flex items-center space-x-1">
+        <nav className="hidden md:flex items-center space-x-6">
           {NAV_LINKS.map(link => (
             <a
               key={link.href}
