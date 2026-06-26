@@ -54,10 +54,10 @@ export default function Header() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 w-full z-50 flex justify-center pt-5 px-4 md:px-8 pointer-events-none">
+    <div className="fixed top-0 inset-x-0 z-50 flex justify-center pt-5 pointer-events-none">
       <header
         className={`
-          flex items-center justify-between w-full max-w-7xl pointer-events-auto
+          flex items-center justify-between w-[calc(100%-2rem)] md:w-[calc(100%-4rem)] max-w-7xl pointer-events-auto
           px-4 md:px-6 py-3.5 rounded-2xl
           transition-all duration-500 ease-out
           ${scrolled
