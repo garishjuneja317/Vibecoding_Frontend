@@ -1,0 +1,620 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ══════════════════════════════════════════════
+   GLOBAL SCROLL & SELECTION
+══════════════════════════════════════════════ */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050d10;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #114C5A, #FFC801);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFC801;
+}
+
+/* ══════════════════════════════════════════════
+   TAILWIND UTILITY LAYER
+══════════════════════════════════════════════ */
+@layer utilities {
+
+  /* ── Timing functions ── */
+  .ease-micro {
+    transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  .ease-reflow {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 400ms;
+  }
+
+  /* ── Glass panel system ── */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.028);
+    backdrop-filter: blur(28px) saturate(1.4);
+    -webkit-backdrop-filter: blur(28px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.085);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .glass-panel-hover {
+    transition: background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+  }
+
+  .glass-panel-hover:hover {
+    background: rgba(255, 255, 255, 0.052);
+    box-shadow: 0 0 50px rgba(255, 200, 1, 0.1), 0 16px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 200, 1, 0.22);
+  }
+
+  /* ── Text gradients ── */
+  .text-gradient {
+    background: linear-gradient(135deg, #F1F6F4 0%, #D9E8E2 50%, #FFC801 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(90deg, #FF9932, #FFC801);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(90deg, #D9E8E2, #F1F6F4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ── Glow text shadows ── */
+  .glow-forsythia {
+    text-shadow: 0 0 25px rgba(255, 200, 1, 0.6), 0 0 50px rgba(255, 200, 1, 0.25);
+  }
+
+  .glow-arctic {
+    text-shadow: 0 0 20px rgba(241, 246, 244, 0.45);
+  }
+
+  .glow-saffron {
+    text-shadow: 0 0 25px rgba(255, 153, 50, 0.6), 0 0 50px rgba(255, 153, 50, 0.2);
+  }
+
+  /* ── Nav link with animated underline ── */
+  .nav-link {
+    position: relative;
+    font-family: var(--font-jetbrains-mono);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: rgba(217, 232, 226, 0.7);
+    transition: color 0.3s ease;
+    padding: 0.25rem 0;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #FF9932, #FFC801);
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    border-radius: 2px;
+  }
+
+  .nav-link:hover {
+    color: #FFC801;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .nav-link.active {
+    color: #FFC801;
+  }
+
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  /* ── Fade-up reveal animation ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(28px);
+    animation: fadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* ── Highlight bar ── */
+  .highlight-bar {
+    position: relative;
+    display: inline-block;
+  }
+
+  .highlight-bar::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: -4px;
+    right: -4px;
+    height: 3px;
+    background: linear-gradient(90deg, #FF9932, #FFC801);
+    border-radius: 2px;
+    opacity: 0.7;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   TAILWIND COMPONENT LAYER
+══════════════════════════════════════════════ */
+@layer components {
+
+  /* ── Marquee ── */
+  .marquee-container {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    gap: 3rem;
+    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  }
+
+  .marquee-content {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    min-width: 100%;
+    gap: 3rem;
+    animation: scrollX 28s linear infinite;
+  }
+
+  .marquee-content-reverse {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    min-width: 100%;
+    gap: 3rem;
+    animation: scrollX 28s linear infinite reverse;
+  }
+
+  /* ── Accordion ── */
+  .accordion-content {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 500ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 350ms ease;
+  }
+
+  .accordion-content.open {
+    max-height: 700px;
+    opacity: 1;
+  }
+
+  /* ── Primary button ── */
+  .btn-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-jetbrains-mono);
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    padding: 1.15rem 2.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #FF9932, #FFC801);
+    color: #172B36;
+    box-shadow: 0 0 28px rgba(255, 200, 1, 0.45), 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+  }
+
+  /* ── btn-primary hover: animate background-position instead of ::before overlay.
+     This eliminates ALL z-index conflicts — no pseudo-element can ever cover the text.
+     GPU-composited via background-position; text color (#172B36 oceanic dark)
+     is always readable against any gold/orange gradient stop. ── */
+  .btn-primary {
+    background-size: 200% auto;
+    background-image: linear-gradient(135deg, #FF9932 0%, #FFC801 50%, #FF9932 100%);
+    transition: background-position 300ms ease,
+      box-shadow 200ms ease-out,
+      transform 200ms ease-out;
+  }
+
+  .btn-primary:hover {
+    background-position: right center;
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(255, 200, 1, 0.72), 0 8px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  /* ── Secondary button ── */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-jetbrains-mono);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    padding: 1.1rem 2rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #F1F6F4;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 200, 1, 0.35);
+    box-shadow: 0 0 22px rgba(255, 200, 1, 0.12);
+    transform: translateY(-1px);
+  }
+
+  /* ── Gold CTA (Pricing "popular" tier) ──
+     Replaces JS onMouseEnter/onMouseLeave with GPU-composited CSS transitions.
+     box-shadow is handled by the compositor thread — zero React re-renders. */
+  .btn-cta-gold {
+    background: linear-gradient(135deg, #FF9932, #FFC801);
+    box-shadow: 0 0 30px rgba(255, 200, 1, 0.45), 0 4px 20px rgba(0, 0, 0, 0.25);
+    transition: box-shadow 200ms ease-out, transform 200ms ease-out;
+  }
+
+  .btn-cta-gold:hover {
+    box-shadow: 0 0 55px rgba(255, 200, 1, 0.72), 0 8px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ── Stat number ── */
+  .stat-number {
+    font-family: var(--font-jetbrains-mono);
+    font-weight: 900;
+    color: #FFC801;
+    text-shadow: 0 0 30px rgba(255, 200, 1, 0.4);
+    line-height: 1;
+  }
+
+  /* ── Section pill label ── */
+  .section-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-jetbrains-mono);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    padding: 0.35rem 0.9rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 200, 1, 0.3);
+    color: #FFC801;
+    background: rgba(255, 200, 1, 0.06);
+  }
+
+  .section-pill-mystic {
+    border-color: rgba(217, 232, 226, 0.2);
+    color: rgba(217, 232, 226, 0.6);
+    background: rgba(217, 232, 226, 0.04);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+══════════════════════════════════════════════ */
+@keyframes scrollX {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-100% - 3rem));
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  20% {
+    transform: translate(70px, -60px) scale(1.15) rotate(45deg);
+  }
+
+  40% {
+    transform: translate(-50px, 40px) scale(0.88) rotate(90deg);
+  }
+
+  60% {
+    transform: translate(40px, 25px) scale(1.1) rotate(135deg);
+  }
+
+  80% {
+    transform: translate(-25px, -35px) scale(0.95) rotate(180deg);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1) rotate(360deg);
+  }
+}
+
+@keyframes orbPulse {
+
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -250% center;
+  }
+
+  100% {
+    background-position: 250% center;
+  }
+}
+
+@keyframes floatY {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-10px) rotate(-1deg);
+  }
+
+  66% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+}
+
+@keyframes floatYSlow {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-16px);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 200, 1, 0.5);
+  }
+
+  70% {
+    box-shadow: 0 0 0 14px rgba(255, 200, 1, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 200, 1, 0);
+  }
+}
+
+@keyframes rotateSlowly {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes lineGrow {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes counterUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   ANIMATION UTILITY CLASSES
+══════════════════════════════════════════════ */
+.animate-blob {
+  animation: blob 16s infinite ease-in-out;
+}
+
+.animate-orb {
+  animation: orbPulse 8s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: floatY 5s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: floatYSlow 8s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulseRing 2.8s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+.animate-rotate-slow {
+  animation: rotateSlowly 20s linear infinite;
+}
+
+.animate-gradient {
+  animation: gradientShift 6s ease infinite;
+  background-size: 200% 200%;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+/* ══════════════════════════════════════════════
+   SHIMMER TEXT
+══════════════════════════════════════════════ */
+.shimmer-text {
+  background: linear-gradient(100deg,
+      #F1F6F4 0%,
+      #D9E8E2 20%,
+      #FFC801 40%,
+      #FF9932 50%,
+      #FFC801 60%,
+      #D9E8E2 80%,
+      #F1F6F4 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+/* ══════════════════════════════════════════════
+   SCROLL PROGRESS INDICATOR
+══════════════════════════════════════════════ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #FF9932, #FFC801, #FF9932);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease infinite;
+  z-index: 9999;
+  transform-origin: left;
+  transition: transform 0.1s linear;
+  box-shadow: 0 0 8px rgba(255, 200, 1, 0.6);
+}
+
+/* ══════════════════════════════════════════════
+   DIAGONAL SECTION DIVIDER
+══════════════════════════════════════════════ */
+.section-divider {
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.section-divider svg {
+  display: block;
+  width: 100%;
+}
+
+/* ══════════════════════════════════════════════
+   NOISE TEXTURE OVERLAY (adds depth to sections)
+══════════════════════════════════════════════ */
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* ══════════════════════════════════════════════
+   TICKER DOT
+══════════════════════════════════════════════ */
+@keyframes tickerPulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+.ticker-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #FFC801;
+  box-shadow: 0 0 8px rgba(255, 200, 1, 0.8);
+  animation: tickerPulse 1.8s ease-in-out infinite;
+}
